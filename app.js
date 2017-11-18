@@ -1,7 +1,10 @@
 
 var fetch = require('node-fetch')
 
+let heroes
+
 const SKILLS = [, "normal", "high", "very high"] // помойки
+const API = 'https://api.opendota.com/api/'
 
 var getFetch = async (url) => {
     let response = await fetch(url)
@@ -10,7 +13,7 @@ var getFetch = async (url) => {
 }
 
 async function getHeroes( ) {
-    let heroesList = await getFetch('https://api.opendota.com/api/heroes')
+    let heroesList = await getFetch(API + 'heroes')
     let result = { }
     heroesList.forEach(function(element) {
         result[element.id] = element
@@ -19,18 +22,23 @@ async function getHeroes( ) {
 }
 
 async function getMatch(id) {
-    let result = await getFetch('https://api.opendota.com/api/matches/' + id)
+    let result = await getFetch(API + 'matches/' + id)
     return result
 }
 
-async function main( ) {
-    let heroes = await getHeroes( )
+function getHeroInfo(player) {
+    return heroes[player.hero_id].localized_name +
+        (player.account_id == null ? '' : ' (id: ' + player.account_id + ')')
+}
 
-    let match = await getMatch(3567893831) // 3567671555
+async function main( ) {
+    heroes = await getHeroes( )
+
+    let match = await getMatch(3567671555)
     console.log( )
     console.log('radiant pick:')
     for (let i = 0; i < 5; i++) {
-        console.log(heroes[match.players[i].hero_id].localized_name)
+        console.log(getHeroInfo(match.players[i]))
     }
 
     console.log( )
@@ -44,6 +52,9 @@ async function main( ) {
 
     console.log( )
     console.log('skill: ' + SKILLS[match.skill])
+
+    // console.log( )
+    // console.log('time: ' + match.duration)
 }
 
 main( )
