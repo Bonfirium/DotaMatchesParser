@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/fit4code/DotaMatchesParser#readme",
   "dependencies": {
+    "fs": "0.0.1-security",
     "node-fetch": "^1.7.3"
   }
 }
